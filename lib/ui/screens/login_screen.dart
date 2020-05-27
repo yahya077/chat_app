@@ -1,7 +1,10 @@
+import 'package:chatapp/providers/auth_provider.dart';
+import 'package:chatapp/ui/screens/main_screen.dart';
 import 'package:chatapp/ui/size_config.dart';
 import 'package:chatapp/ui/style.dart';
 import 'package:chatapp/ui/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static final routeName = 'login';
@@ -11,16 +14,24 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _key = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+
+
   static bool isEmail(String em) {
     String p =
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     RegExp regExp = new RegExp(p);
     return regExp.hasMatch(em);
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Style.darkColor,
       body: ListView(
         children: <Widget>[
@@ -43,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      controller: _email,
                       decoration: Style.inputDecoration("Email"),
                       validator: (v) {
                         if (v.isEmpty) {
@@ -52,11 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
-                      onSaved: (v){
-                        //user.name = v;
-                      },
                     ),
                     TextFormField(
+                      controller: _password,
                       obscureText: true,
                       decoration: Style.inputDecoration("Password"),
                       validator: (v) {
@@ -67,9 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         }else
                           return null;
                       },
-                      onSaved: (v){
-                        //user.name = v;
-                      },
                     ),
                   ],
                 ),
@@ -78,10 +85,18 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       bottomNavigationBar: Container(
         child: PrimaryButton(
-          onTap: () {
-            if(_key.currentState.validate()){
+          onTap: () async{
+            if(_key.currentState.validate()) {
               _key.currentState.save();
               print('is validate');
+              var login = await Provider.of<AuthProvider>(context,listen: false).login(_email.text,_password.text);
+              if(login){
+                Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+              }else {
+                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(Provider.of<AuthProvider>(context).message),
+                ));
+              }
             }else {
               print('is not validate');
             }

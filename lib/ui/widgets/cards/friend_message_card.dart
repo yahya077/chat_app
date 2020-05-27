@@ -1,9 +1,12 @@
+import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/ui/style.dart';
 import 'package:flutter/material.dart';
 
 class FriendMessageCard extends StatelessWidget {
+  final MessageModal message;
+  final String imageUrl;
   const FriendMessageCard({
-    Key key,
+    Key key, this.message, this.imageUrl,
   }) : super(key: key);
 
   @override
@@ -14,7 +17,7 @@ class FriendMessageCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           CircleAvatar(
-            backgroundImage: NetworkImage(
+            backgroundImage: NetworkImage(imageUrl != null ? imageUrl :
                 'http://w3schools.fzxgj.top/Static/Picture/img_avatar3.png'),
           ),
           SizedBox(width: 12,),
@@ -36,7 +39,7 @@ class FriendMessageCard extends StatelessWidget {
                     topRight: Radius.circular(21),
                     bottomRight: Radius.circular(21),
                   )),
-              child: Text("This is lorem message"),
+              child: Text("${message.body}"),
             ),
           )
         ],

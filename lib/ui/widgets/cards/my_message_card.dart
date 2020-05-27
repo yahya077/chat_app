@@ -1,10 +1,12 @@
+import 'package:chatapp/models/message_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../style.dart';
 
 class MyMessageCard extends StatelessWidget {
+  final MessageModal message;
   const MyMessageCard({
-    Key key,
+    Key key, this.message,
   }) : super(key: key);
 
   @override
@@ -24,13 +26,8 @@ class MyMessageCard extends StatelessWidget {
                     topRight: Radius.circular(21),
                     bottomLeft: Radius.circular(21),
                   )),
-              child: Text("This is lorem message"),
+              child: Text("${message.body}"),
             ),
-          ),
-          SizedBox(width: 12,),
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-                'http://w3schools.fzxgj.top/Static/Picture/img_avatar3.png'),
           ),
         ],
       ),

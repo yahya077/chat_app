@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -10,26 +11,35 @@ class Api {
   Api._internal();
 
   String token;
-  String baseUrl = 'http://chat.test/';
-  String path = 'api/';
+  String baseUrl = 'http://192.168.1.34';
+  String path = 'api';
 
-  Future<http.Response> httpGet(String endPath, {Map<String, String> query}) {
-    Uri uri = Uri.http(baseUrl, '$path/$endPath');
+  Future<Response> httpGet(String endPath, {Map<String, String> query}) {
+    var dio = new Dio();
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers["Authorization"] = "Bearer $token";
+
+    String url = '$baseUrl/$path/$endPath';
     if (query != null) {
-      uri = Uri.http(baseUrl, '$path/$endPath', query);
+      return dio.get(url,queryParameters: query);
     }
-    return http.get(uri, headers: {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    });
+    return dio.get(url);
   }
 
+  Future<Response> httpPost(String endPath, Object body) {
+    Dio dio = new Dio();
+    String uri = '$baseUrl/$path/$endPath';
+    print(uri);
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers["Authorization"] = "Bearer $token";
+    print(body);
+    return dio.post(uri,data: body);
+  }
+  /*
   Future<http.Response> httpPost(String endPath, Object body) {
-    Uri uri = Uri.http(baseUrl, '$path/$endPath');
-
-    return http.post(uri,body: body, headers: {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    });
-  }
+    String url = '$baseUrl/$path/$endPath';
+    return http.post(url, body: body, headers: {
+      'Authorization':'Bearer $token',
+      'Accept':'application/json'});
+  }*/
 }

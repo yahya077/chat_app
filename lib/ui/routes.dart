@@ -4,7 +4,7 @@ import 'package:chatapp/ui/screens/signup_screen.dart';
 import 'package:chatapp/ui/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-const String initialRoute = "main";
+const String initialRoute = "welcome";
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
